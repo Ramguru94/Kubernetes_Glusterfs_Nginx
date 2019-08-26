@@ -1,0 +1,36 @@
+# YAML Configuration to create Deployment of Java app
+# Maintained By   : Ramguru
+# Pre-Requisites  : Fill in the details in %NAME% format
+# Usage           : kubectl create -f <--name-of-this-yaml-file-->
+
+#Deployment Configuration
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-site
+spec:
+  replicas: 1
+  template:
+   metadata:
+    labels:
+     name: nginx-site
+   spec:
+    containers:
+      - image: <docker_image>
+        name: nginx
+        ports:
+          - name: ssl-proxy-http
+            containerPort: 80
+          - name: ssl-proxy-https
+            containerPort: 443
+        volumeMounts:
+        - mountPath: /etc/nginx/sites-available
+          name: rhea-web-vol
+    volumes:
+    - name: web-vol
+      glusterfs:
+        endpoints: web-volume
+        path: nginx
+        readOnly: false
+
+---
